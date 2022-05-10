@@ -82,10 +82,12 @@ router.get("/book/:isbn_id", (req, res) => {
       const bookID = req.params.isbn_id;
       let myData = JSON.parse(data);
       let searchedBook = "";
-      if (myData.books[i].isbn_id === bookID) {
-        res.send(searchedBook.push(myData.books[i]));
-      } else {
-        res.send("there is no such book with that ISBN ID");
+      for (i = 0; i < searchedBook.length; i++) {
+        if (myData.books[i].isbn_id === bookID) {
+          res.send((searchedBook = myData.books[i]));
+        } else {
+          res.send("there is no such book with that ISBN ID");
+        }
       }
     }
   });
