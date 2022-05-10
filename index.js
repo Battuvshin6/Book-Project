@@ -1,7 +1,8 @@
 const express = require("express");
 const fs = require("fs");
 const app = express();
-
+const router = express.Router();
+const bodyParser = require("body-parser");
 app.get("/", (req, res) => {
   fs.readFile("book.json", (error, data) => {
     if (error) {
@@ -25,8 +26,8 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/recent", (req, res) => {
-  fs.writeFile("book.json", (error, data) => {
+router.get("/recent", (req, res) => {
+  fs.readFile("book.json", (error, data) => {
     if (error) {
       throw error;
     } else {
@@ -47,27 +48,45 @@ app.get("/recent", (req, res) => {
   });
 });
 
-app.get("/authors", (req, res) => {
-  fs.writeFile("book.json", (error, data) => {
+router.get("/authors", (req, res) => {
+  fs.readFile("book.json", (error, data) => {
     if (error) {
       throw error;
     } else {
       let myData = JSON.parse(data);
+      console.log(myData);
       let authors = myData.books.map((e) => {
-        e.author;
+        return e.author;
       });
       res.send(authors);
     }
   });
 });
 
-app.get("/description", (req, res) => {
-  fs.writeFile("book.json", (error, data) => {
+router.get("/description", (req, res) => {
+  fs.readFile("book.json", (error, data) => {
     if (error) {
       throw error;
     } else {
       let myData = JSON.parse(data);
       res.send(myData.books);
+    }
+  });
+});
+
+router.get("/book/:isbn_id", (req, res) => {
+  fs.readFile("book.json", (error, data) => {
+    if (error) {
+      throw error;
+    } else {
+      const bookID = req.params.isbn_id;
+      let myData = JSON.parse(data);
+      let searchedBook = "";
+      if (myData.books[i].isbn_id === bookID) {
+        res.send(searchedBook.push(myData.books[i]));
+      } else {
+        res.send("there is no such book with that ISBN ID");
+      }
     }
   });
 });
