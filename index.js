@@ -3,6 +3,8 @@ const fs = require("fs");
 const app = express();
 const router = express.Router();
 const bodyParser = require("body-parser");
+// app.use(bodyParser);
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   fs.readFile("book.json", (error, data) => {
     if (error) {
@@ -74,23 +76,70 @@ router.get("/description", (req, res) => {
   });
 });
 
-router.get("/book/:isbn_id", (req, res) => {
+app.get("/book/:isbn_id", (req, res) => {
   fs.readFile("book.json", (error, data) => {
     if (error) {
       throw error;
     } else {
-      const bookID = req.params.isbn_id;
+      let bookID = req.params.isbn_id;
       let myData = JSON.parse(data);
-      let searchedBook = "";
-      for (i = 0; i < searchedBook.length; i++) {
-        if (myData.books[i].isbn_id === bookID) {
-          res.send((searchedBook = myData.books[i]));
+      let searchedBook;
+      for (i = 0; i < myData.books.length; i++) {
+        if (myData.books[i].isbn == bookID) {
+          searchedBook = myData.books[i];
         } else {
-          res.send("there is no such book with that ISBN ID");
         }
+      }
+      if (searchedBook) {
+        res.send(searchedBook);
+      } else {
+        res.send("no book");
       }
     }
   });
 });
 
+app.get("/mostpages", (req, res) => {
+  fs.readFile("book.json", (error, data) => {
+    if (error) {
+      throw error;
+    } else {
+      const myData = JSON.parse(data);
+      let sortedData = myData.books.sort((x, y) => {
+        if (x.pages > y.pages) {
+          return -1;
+        } else if (x.pages < y.pages) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+      res.send(sortedData[0]);
+    }
+  });
+});
+
+app.get("/leastpages", (req, res) => {
+  fs.readFile("book.json", (error, data) => {
+    if (error) {
+      throw error;
+    } else {
+      const myData = JSON.parse(data);
+      let sortedData = myData.books.sort((x, y) => {
+        if (x.pages > y.pages) {
+          return 1;
+        } else if (x.pages < y.pages) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      res.send(sortedData[0]);
+    }
+  });
+});
+
+app.get("/addbooks", (req, res) => {
+  res.send("/Ejs-folder/index.ejs");
+});
 app.listen(3000);
