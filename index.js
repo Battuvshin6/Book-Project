@@ -3,8 +3,9 @@ const fs = require("fs");
 const app = express();
 const router = express.Router();
 const bodyParser = require("body-parser");
-// app.use(bodyParser);
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use("ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
 app.get("/", (req, res) => {
   fs.readFile("book.json", (error, data) => {
     if (error) {
@@ -23,7 +24,7 @@ app.get("/", (req, res) => {
           }
         }
       }
-      res.send(arr);
+      res.render("main.ejs", { books: arr, port: 3000 });
     }
   });
 });
