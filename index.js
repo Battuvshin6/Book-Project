@@ -140,6 +140,6 @@ app.get("/leastpages", (req, res) => {
 });
 
 app.get("/addbooks", (req, res) => {
-  res.send("/Ejs-folder/index.ejs");
+  res.render("index.ejs");
 });
 app.listen(3000);
